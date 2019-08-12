@@ -36,7 +36,7 @@ class VideoCaptionsActivity : AppCompatActivity() {
                     if (textTrackIndex >= 0) {
                         player.selectTrack(textTrackIndex)
                     } else {
-                        Log.v(TAG, "Cannot find text track!")
+                        Log.v(TAG, "Unable to find text track!")
                     }
                     player.setOnTimedTextListener { mp, text ->
                         if (text != null) {
@@ -106,7 +106,7 @@ class VideoCaptionsActivity : AppCompatActivity() {
         }
     }
 
-    // A handy method I use to close all the streams
+   
     private fun closeStreams(vararg closeables: Closeable?) {
         if (closeables != null) {
             for (stream in closeables) {
@@ -121,7 +121,7 @@ class VideoCaptionsActivity : AppCompatActivity() {
         }
     }
 
-    // To display the seconds in the duration format 00:00:00
+
     fun secondsToDuration(seconds: Int): String {
         return String.format("%02d:%02d:%02d", seconds / 3600, seconds % 3600 / 60, seconds % 60, Locale.US)
     }
