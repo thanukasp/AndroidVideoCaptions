@@ -31,16 +31,16 @@ class VideoCaptionsActivity : AppCompatActivity() {
                         mimeType = MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP
                     else mimeType = MediaFormat.MIMETYPE_TEXT_SUBRIP
 
-                    player.addTimedTextSource(getSubtitleFile(R.raw.subtitle), mimeType)
+                    player.addTimedTextSource(getCaptionsFile(R.raw.subtitle), mimeType)
                     val textTrackIndex = findTrackIndexFor(TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT, player.trackInfo)
                     if (textTrackIndex >= 0) {
                         player.selectTrack(textTrackIndex)
-                    } else {
-                        Log.v(TAG, "Unable to find text track!")
                     }
                     player.setOnTimedTextListener { mp, text ->
                         if (text != null) {
                             handler.post {
+                                // To validate the caption with given time we display the time here.
+                                // For actual case we should remove this
                                 val seconds = mp.currentPosition / 1000
                                 subtitleTxtView!!.text = ("[" + secondsToDuration(seconds) + "] " + text.text)
                             }
@@ -73,21 +73,21 @@ class VideoCaptionsActivity : AppCompatActivity() {
         return index
     }
 
-    private fun getSubtitleFile(resId: Int): String {
+    private fun getCaptionsFile(resId: Int): String {
         val fileName = resources.getResourceEntryName(resId)
-        val subtitleFile = getFileStreamPath(fileName)
-        if (subtitleFile.exists()) {
-            Log.v(TAG, "Subtitle file already exists")
-            return subtitleFile.absolutePath
+        val captionsFile = getFileStreamPath(fileName)
+        if (captionsFile.exists()) {
+            Log.v(TAG, "Captions file already exists")
+            return captionsFile.absolutePath
         } else {
-            Log.v(TAG, "Subtitle file does not exists, copy it to app folder from raw")
+            Log.v(TAG, "Captions file does not exists, copy it to app folder from raw")
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
             try {
                 inputStream = resources.openRawResource(resId)
-                outputStream = FileOutputStream(subtitleFile, false)
+                outputStream = FileOutputStream(captionsFile, false)
                 copyFile(inputStream!!, outputStream)
-                return subtitleFile.absolutePath
+                return captionsFile.absolutePath
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
@@ -106,7 +106,7 @@ class VideoCaptionsActivity : AppCompatActivity() {
         }
     }
 
-   
+
     private fun closeStreams(vararg closeables: Closeable?) {
         if (closeables != null) {
             for (stream in closeables) {
@@ -145,7 +145,7 @@ class VideoCaptionsActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val TAG = "VideoSubtitle"
+        private val TAG = "VideoCaption"
         private val handler = Handler()
     }
 }
