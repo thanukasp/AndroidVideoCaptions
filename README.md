@@ -1,2 +1,2 @@
 # Android Video Captions
-How to display the video captions (subtitles) over the video
+This is an example to display the video captions (subtitles) over the video.
